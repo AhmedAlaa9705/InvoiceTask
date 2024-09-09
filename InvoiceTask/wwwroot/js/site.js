@@ -11,8 +11,8 @@ var price = document.getElementById("price");
 var droplist = document.querySelector('.drop-list');
 var fTd = document.getElementById("ftd");
 
-function showItems() {
-   
+function showItems(e) {
+
     debugger;
     //if (ddlItemType.value == '') {
     //    ddlItem.innerHTML = '<option value="">اختر نوع الصنف</option>';
@@ -30,17 +30,24 @@ function showItems() {
                 newItem += `<option value="${data[x].id}">${data[x].itemName}</option>`;
             }
             localStorage.setItem("items", JSON.stringify(data));
-
+            console.log("this",e);
             //  ddlItem.innerHTML = newItem;
-            $("#ddlItemName").html(newItem);
+            console.log("now",e.closest("td").nextElementSibling.firstElementChild);
+            let nextEl = document.querySelector("#ddlItemType").closest("td").nextElementSibling.firstElementChild;
+            console.log("nextEl", document.querySelector("#ddlItemType").closest("td").nextElementSibling.firstElementChild);
+            let nex = e.closest("td").nextElementSibling.firstElementChild;
+            nex.innerHTML = newItem;
+            //  nextEl.innerHTML = newItem;
+           
+           // $("#ddlItemName").html(newItem);
             console.log("ss", newItem);
             var id = $("#ddlItemType").val();
             localStorage.setItem("itemId", id);
-            
+
 
         }
     });
-   
+
     //}
 };
 
@@ -55,10 +62,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
             debugger;
             count++;
             //  let $sel = $(`<select  id="ddlItemType"><option value="">اختر نوع الصنف</option></select>`);
-             allSel += `<tr>
+            allSel += `<tr>
                     <td id="ftd">
                        
-                         <select id="ddlItemType" class="drop-list">
+                         <select id="ddlItemType" class="drop-list" onchange="showItems(this)">
                            
                                 <option  value="">اختر نوع الصنف</option>
 
@@ -67,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                     </td>
                     <td>
-                        <select  id="ddlItemName" >
+                        <select  id="ddlItemName" onchange="showPrice()">
                             <option value="">اختر اسم الصنف</option>
                         </select>
 
@@ -76,13 +83,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         <input type="number" id="price" />
                     </td>
                     <td>
-                        <input  type="number" value="0" id="quantity" />
+                        <input  type="number" value="0" id="quantity" onchange="addNewForm()" />
                     </td>
                 </tr>`;
             console.log(data);
 
             let itemTypes = '';
-            for (let x in data) {   
+            for (let x in data) {
                 itemTypes += `
 
                             <option value="${data[x].id}">${data[x].typeName}</option>`;
@@ -94,101 +101,108 @@ document.addEventListener('DOMContentLoaded', function (e) {
             /*    tbl.insertAdjacentHTML('afterbegin', td);*/
 
             $("#ddlItemType").append(itemTypes);
-            const is= document.getElementById("ddlItemType");
+            const is = document.getElementById("ddlItemType");
             console.log("id", is);
-            is.addEventListener("change", showItems);
+           // is.addEventListener("change", showItems);
             var ddlItem = document.getElementById("ddlItemName");
 
-            ddlItem.addEventListener("change", function () {
+            //ddlItem.addEventListener("change", function () {
 
-                $.ajax({
-                    url: `/Home/GetItemPrice/${ddlItem.value}`,
-                    method: 'GET',
-                    cache: false,
-                    success: function (data) {
-                        debugger;
-                        console.log(data);
-                        var price = document.getElementById("price");
+            //    $.ajax({
+            //        url: `/Home/GetItemPrice/${ddlItem.value}`,
+            //        method: 'GET',
+            //        cache: false,
+            //        success: function (data) {
+            //            debugger;
+            //            console.log(data);
+            //            var price = document.getElementById("price");
 
-                        price.value = data.price;
-                    }
-                });
-                console.log("fired");
-            });
-            var qtty = document.getElementById("quantity");
-            qtty.addEventListener("change", function (e) {
-                e.preventDefault();
-                debugger
-                console.log("xxxf", e.target.closest("tbody").children.item(1));
+            //            price.value = data.price;
+            //        }
+            //    });
+            //    console.log("fired");
+            //});
+            //var qtty = document.getElementById("quantity");
+            //qtty.addEventListener("change", function (e) {
+            //    e.preventDefault();
+            //    debugger
+            //    console.log("xxxf", e.target.closest("tbody").children.item(1));
 
-                let itemTypes = '';
-                for (let x in data) {
-                    itemTypes += `
+            //    let itemTypes = '';
+            //    for (let x in data) {
+            //        itemTypes += `
 
-                            <option value="${data[x].id}">${data[x].typeName}</option>`;
-                }
-                var d = $("#tbl");
-                allSel += `<tr>
-                    <td id="ftd">
+            //                <option value="${data[x].id}">${data[x].typeName}</option>`;
+            //    }
+            //    var d = $("#tbl");
+            //    allSel += `<tr>
+            //        <td id="ftd">
                        
-                         <select id="ddlItemType" class="drop-list">
+            //             <select id="ddlItemType" class="drop-list">
                            
-                                <option  value="">اختر نوع الصنف</option>
+            //                    <option  value="">اختر نوع الصنف</option>
 
                         
-                        </select>
+            //            </select>
 
-                    </td>
-                    <td>
-                        <select  id="ddlItemName" >
-                            <option value="">اختر اسم الصنف</option>
-                        </select>
+            //        </td>
+            //        <td>
+            //            <select  id="ddlItemName" >
+            //                <option value="">اختر اسم الصنف</option>
+            //            </select>
 
-                    </td>
-                    <td>
-                        <input type="number" id="price" />
-                    </td>
-                    <td>
-                        <input  type="number" value="0" id="quantity" />
-                    </td>
-                </tr>`;
-
-
-                $("#tbl").html(allSel);
-                /*    tbl.insertAdjacentHTML('afterbegin', td);*/
-                var f = $("#ddlItemType");
-
-                $("#ddlItemType").append(itemTypes);
+            //        </td>
+            //        <td>
+            //            <input type="number" id="price" />
+            //        </td>
+            //        <td>
+            //            <input  type="number" value="0" id="quantity" />
+            //        </td>
+            //    </tr>`;
 
 
+            //    $("#tbl").html(allSel);
+            //    /*    tbl.insertAdjacentHTML('afterbegin', td);*/
+            //    var f = $("#ddlItemType");
 
-            });
+            //    $("#ddlItemType").append(itemTypes);
+
+
+
+            //});
 
         }
-           
+
     });
 
 });
+
+function showPrice() {
+    debugger;
+    let itemId = document.getElementById("ddlItemName").value;
+    $.ajax({
+        url: `/Home/GetItemPrice/${itemId}`,
+        method: 'GET',
+        cache: false,
+        success: function (data) {
+            debugger;
+            console.log(data);
+            document.getElementById("price").value = data.price;
+            //price.value = data.price;
+        }
+    });
+}
+
+
+
+
 //$("#ddlItemType").on("change", showItems());
 //ddlItemType.addEventListener('change', function (e) {
 //    console.log(e.target);
 //    showItems;
 //});
 
-function showPrice(id) {
-    debugger;
-    
-    //$.ajax({
-    //    url: `/Home/GetItemPrice/${id}`,
-    //    method: 'GET',
-    //    cache: false,
-    //    success: function (data) {
-    //        debugger;
-    //        console.log(data);
-    //        price.value = data.price;
-    //    }
-    //});
-}
+
 debugger;
 let itemId = localStorage.getItem("itemId");
 console.log("itemId", itemId);
@@ -252,17 +266,17 @@ let addNewRow = function () {
 
                 for (let x in data) {
                     itemTypes += `<option value="${data[x].id}">${data[x].typeName}</option>`;
-                }                                                                                   
+                }
                 console.log("qqq", data);
                 console.log("type", itemTypes);
                 $("#tbl").append($tr)
 
-               // tbl.insertAdjacentHTML('beforeend', $tr);
+                // tbl.insertAdjacentHTML('beforeend', $tr);
                 let newDll = document.getElementById(`ddlItemType`);
                 let newD = document.querySelectorAll(".drop-list");
                 newD.forEach(el => {
                     el.innerHTML = itemTypes
-                    
+
                 });
                 let newObj = localStorage.getItem("items");
                 let items = JSON.parse(newObj);
@@ -270,9 +284,9 @@ let addNewRow = function () {
                     newItem += `<option value="${items[x].id}">${items[x].itemName}</option>`;
                 }
                 ddlItem.innerHTML = newItem;
-            
+
                 console.log("obj", JSON.parse(newObj));
-            
+
                 // droplist.innerHTML = itemTypes;
                 console.log("yarb", document.querySelector(".drop-list"));
 
@@ -291,7 +305,7 @@ let addNewRow = function () {
                             localStorage.setItem("items", JSON.stringify(data));
 
                             document.querySelector('.clItemName').innerHTML = newItem;
-                          //  $("#ddlItemName").html(newItem);
+                            //  $("#ddlItemName").html(newItem);
                             console.log("ss", newItem);
                             console.log("event", e);
                             var id = $("#ddlItemType").val();
@@ -377,7 +391,7 @@ let addNewRow = function () {
                             // droplist.innerHTML = itemTypes;
                             console.log("yarb", document.querySelector(".drop-list"));
                         }
-                        });
+                    });
 
 
 
@@ -386,11 +400,11 @@ let addNewRow = function () {
 
 
                 });
-                
+
             }
         });
 
-       
+
 
     }
 
@@ -428,3 +442,140 @@ let addNewRow = function () {
 
 //qtty.addEventListener('change', addNewRow);
 
+
+function addNewForm() {
+    $.ajax({
+        url: `/Home/GetItemsType`,
+        method: 'GET',
+        cache: false,
+        success: function (data) {
+            let newSel = '';
+            debugger;
+            count++;
+            //  let $sel = $(`<select  id="ddlItemType"><option value="">اختر نوع الصنف</option></select>`);
+            newSel += `<tr>
+                    <td id="ftd">
+                       
+                         <select id="ddlItemType" class="drop-list" onchange="showItems()">
+                           
+                                <option  value="">اختر نوع الصنف</option>
+
+                        
+                        </select>
+
+                    </td>
+                    <td>
+                        <select  id="ddlItemName" onchange="showPrice()">
+                            <option value="">اختر اسم الصنف</option>
+                        </select>
+
+                    </td>
+                    <td>
+                        <input type="number" id="price" />
+                    </td>
+                    <td>
+                        <input  type="number" value="0" id="quantity" onchange="addNewForm()"/>
+                    </td>
+                </tr>`;
+            console.log(data);
+
+            let itemTypes = '';
+            for (let x in data) {
+                itemTypes += `
+
+                            <option value="${data[x].id}">${data[x].typeName}</option>`;
+            }
+
+            console.log("type", itemTypes);
+            //  $("#ftd").append($sel);
+            //$("#tbl").html(allSel);
+            /*    tbl.insertAdjacentHTML('afterbegin', td);*/
+            document.querySelector("#tbl").insertAdjacentHTML("beforeend", newSel);
+            let lastch = document.querySelector("#ddlItemType").closest("tbody").lastElementChild.firstElementChild.firstElementChild;
+            lastch.innerHTML = itemTypes;
+
+            console.log("lastone", document.querySelector("#ddlItemType").closest("tbody").lastElementChild.firstElementChild.firstElementChild);
+
+
+            document.querySelector("#ddlItemType").innerHTML= itemTypes;
+
+         //   $("#ddlItemType").append(itemTypes);
+            const is = document.getElementById("ddlItemType");
+            console.log("id", is);
+            // is.addEventListener("change", showItems);
+            var ddlItem = document.getElementById("ddlItemName");
+
+            //ddlItem.addEventListener("change", function () {
+
+            //    $.ajax({
+            //        url: `/Home/GetItemPrice/${ddlItem.value}`,
+            //        method: 'GET',
+            //        cache: false,
+            //        success: function (data) {
+            //            debugger;
+            //            console.log(data);
+            //            var price = document.getElementById("price");
+
+            //            price.value = data.price;
+            //        }
+            //    });
+            //    console.log("fired");
+            //});
+            //var qtty = document.getElementById("quantity");
+            //qtty.addEventListener("change", function (e) {
+            //    e.preventDefault();
+            //    debugger
+            //    console.log("xxxf", e.target.closest("tbody").children.item(1));
+
+            //    let itemTypes = '';
+            //    for (let x in data) {
+            //        itemTypes += `
+
+            //                <option value="${data[x].id}">${data[x].typeName}</option>`;
+            //    }
+            //    var d = $("#tbl");
+            //    allSel += `<tr>
+            //        <td id="ftd">
+
+            //             <select id="ddlItemType" class="drop-list">
+
+            //                    <option  value="">اختر نوع الصنف</option>
+
+
+            //            </select>
+
+            //        </td>
+            //        <td>
+            //            <select  id="ddlItemName" >
+            //                <option value="">اختر اسم الصنف</option>
+            //            </select>
+
+            //        </td>
+            //        <td>
+            //            <input type="number" id="price" />
+            //        </td>
+            //        <td>
+            //            <input  type="number" value="0" id="quantity" />
+            //        </td>
+            //    </tr>`;
+
+
+            //    $("#tbl").html(allSel);
+            //    /*    tbl.insertAdjacentHTML('afterbegin', td);*/
+            //    var f = $("#ddlItemType");
+
+            //    $("#ddlItemType").append(itemTypes);
+
+
+
+            //});
+
+        }
+
+    });
+}
+
+
+function writeName() {
+    console.log("Ahmed Alaa");
+}
