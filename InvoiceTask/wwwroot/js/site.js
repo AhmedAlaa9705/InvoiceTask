@@ -18,35 +18,42 @@ function showItems(e) {
     //    ddlItem.innerHTML = '<option value="">اختر نوع الصنف</option>';
     //} else {
     const $id = $('#ddlItemType').val()
-    $.ajax({
-        url: `/Home/GetItems/${$id}`,
-        method: 'GET',
-        cache: false,
-        success: function (data) {
-            console.log(data);
-            debugger;
-            let newItem = '';
-            for (let x in data) {
-                newItem += `<option value="${data[x].id}">${data[x].itemName}</option>`;
+    if (e.value == "") {
+        nex.innerHTML = `<option value="">اختر نوع الصنف</option>`
+    } else {
+
+        $.ajax({
+            url: `/Home/GetItems/${e.value}`,
+            method: 'GET',
+            cache: false,
+            success: function (data) {
+                console.log(data);
+                debugger;
+                let newItem = '';
+                for (let x in data) {
+                    newItem += `<option value="${data[x].id}">${data[x].itemName}</option>`;
+                }
+
+                console.log("who", e);
+                localStorage.setItem("items", JSON.stringify(data));
+                console.log("this", e);
+                //  ddlItem.innerHTML = newItem;
+                console.log("now", e.closest("td").nextElementSibling.firstElementChild);
+                let nextEl = document.querySelector("#ddlItemType").closest("td").nextElementSibling.firstElementChild;
+                console.log("nextEl", document.querySelector("#ddlItemType").closest("td").nextElementSibling.firstElementChild);
+                let nex = e.closest("td").nextElementSibling.firstElementChild;
+                nex.innerHTML = newItem;
+                //  nextEl.innerHTML = newItem;
+
+                // $("#ddlItemName").html(newItem);
+                console.log("ss", newItem);
+                var id = $("#ddlItemType").val();
+                localStorage.setItem("itemId", id);
+
+
             }
-            localStorage.setItem("items", JSON.stringify(data));
-            console.log("this",e);
-            //  ddlItem.innerHTML = newItem;
-            console.log("now",e.closest("td").nextElementSibling.firstElementChild);
-            let nextEl = document.querySelector("#ddlItemType").closest("td").nextElementSibling.firstElementChild;
-            console.log("nextEl", document.querySelector("#ddlItemType").closest("td").nextElementSibling.firstElementChild);
-            let nex = e.closest("td").nextElementSibling.firstElementChild;
-            nex.innerHTML = newItem;
-            //  nextEl.innerHTML = newItem;
-           
-           // $("#ddlItemName").html(newItem);
-            console.log("ss", newItem);
-            var id = $("#ddlItemType").val();
-            localStorage.setItem("itemId", id);
-
-
-        }
-    });
+        });
+    }
 
     //}
 };
@@ -74,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                     </td>
                     <td>
-                        <select  id="ddlItemName" onchange="showPrice()">
+                        <select  id="ddlItemName" onchange="showPrice(this)">
                             <option value="">اختر اسم الصنف</option>
                         </select>
 
@@ -177,17 +184,20 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
 });
 
-function showPrice() {
+function showPrice(e) {
     debugger;
     let itemId = document.getElementById("ddlItemName").value;
     $.ajax({
-        url: `/Home/GetItemPrice/${itemId}`,
+        url: `/Home/GetItemPrice/${e.value}`,
         method: 'GET',
         cache: false,
         success: function (data) {
+            console.log("showPrice",e);
             debugger;
             console.log(data);
-            document.getElementById("price").value = data.price;
+            console.log("price",e.closest("td").nextElementSibling.firstElementChild);
+            //  document.getElementById("price").value = data.price;
+            e.closest("td").nextElementSibling.firstElementChild.value = data.price;
             //price.value = data.price;
         }
     });
@@ -456,7 +466,7 @@ function addNewForm() {
             newSel += `<tr>
                     <td id="ftd">
                        
-                         <select id="ddlItemType" class="drop-list" onchange="showItems()">
+                         <select id="ddlItemType" class="drop-list" onchange="showItems(this)">
                            
                                 <option  value="">اختر نوع الصنف</option>
 
@@ -465,7 +475,7 @@ function addNewForm() {
 
                     </td>
                     <td>
-                        <select  id="ddlItemName" onchange="showPrice()">
+                        <select  id="ddlItemName" onchange="showPrice(this)">
                             <option value="">اختر اسم الصنف</option>
                         </select>
 
