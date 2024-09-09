@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -20,14 +21,15 @@ namespace InvoiceTask.Domain
 
         [ForeignKey("ItemTypeId")]
         public ItemType ItemType { get; set; }
-
-        public int? SupplierId { get; set; }
-        [ForeignKey("SupplierId")]
-        public Supplier Supplier { get; set; }
-
-
-
+        [Required]
+        public string ClientName { get; set; }
+        [Required]
         public DateTime InvoiceDate { get; set; }
+        [Required]
+        public decimal Price { get; set; }
+        [Required]
+        public int quantity { get; set; }
+        public decimal? Total { get; set; }
 
     }
 }

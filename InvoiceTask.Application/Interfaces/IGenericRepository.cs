@@ -15,8 +15,7 @@ namespace InvoiceTask.Application.Interfaces
         T GetById(Expression<Func<T, bool>> filter, params string[] includes);
         T GetByIdWithInclude(Expression<Func<T, bool>> filter, object id, string[] includes = null);
         void Insert(T obj);
-        void Update(T obj);
-        void Delete(int id);
+        void save();
         IList<T> Fitler(Expression<Func<T, bool>> pridicate);
         IList<T> Fitler(Expression<Func<T, bool>> pridicate, params string[] includes);
     }

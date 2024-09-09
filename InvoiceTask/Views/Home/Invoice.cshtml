@@ -1,12 +1,14 @@
-﻿@model BuyInvoice
+﻿
 @{
     ViewData["Title"] = "Invoice";
 }
 
 <div class="container">
     <h1>فاتوره مبيعات</h1>
+    <div id="frm">
 
     <form>
+        
         <label>تاريخ المستند</label>
         <input type="date" name="name" value="" />
 
@@ -14,7 +16,10 @@
         <input type="text" name="name" value="" />
 
         <label>اسم العميل</label>
-        <input type="text" name="name" value=""  onfocus="writeName()" />
+        <input type="text" name="name" value=""  />
+
+        <label>البحث  بالعميل</label>
+        <input type="text" id="searchDt" />
 
         <table class="table table-striped">
             <thead>
@@ -31,5 +36,28 @@
 
             </tbody>
             </table>
+
  </form>
+    </div>
+
+
+    <table class="table table-primary">
+        <thead>
+            <tr>
+                <th>رقم المستند</th>
+                <th> اسم العميل</th>
+                <th>نوع الصنف</th>
+                <th>اسم الصنف</th>
+                <th>السعر</th>
+                <th>الكميه</th>
+                <th>الاجمالي</th>
+            </tr>
+        </thead>
+        <tbody id="invoicedt">
+
+
+        </tbody>
+    </table>
+
+
 </div>

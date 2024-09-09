@@ -4,6 +4,7 @@ using InvoiceTask.Infrastructuer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvoiceTask.Infrastructuer.Migrations
 {
     [DbContext(typeof(DataDbContext))]
-    partial class DataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240909184549_addpriceandquantity")]
+    partial class addpriceandquantity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +32,6 @@ namespace InvoiceTask.Infrastructuer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ClientName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
@@ -48,8 +46,9 @@ namespace InvoiceTask.Infrastructuer.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("Total")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("SupplierId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");
@@ -59,6 +58,8 @@ namespace InvoiceTask.Infrastructuer.Migrations
                     b.HasIndex("ItemId");
 
                     b.HasIndex("ItemTypeId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Invoices");
                 });
@@ -139,9 +140,17 @@ namespace InvoiceTask.Infrastructuer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("InvoiceTask.Domain.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Item");
 
                     b.Navigation("ItemType");
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("InvoiceTask.Domain.Item", b =>

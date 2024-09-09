@@ -15,11 +15,7 @@ namespace InvoiceTask.Infrastructuer.Repository
             _db = db;
             table = db.Set<T>();
         }
-        public void Delete(int id)
-        {
-            var t= table.Find(id);
-            table.Remove(t);
-        }
+       
 
         public IList<T> Fitler(Expression<Func<T, bool>> pridicate, params string[] includes)
         {
@@ -106,12 +102,12 @@ namespace InvoiceTask.Infrastructuer.Repository
         public void Insert(T obj)
         {
             table.Add(obj);
+           
         }
 
-
-        public void Update(T obj)
+        public void save()
         {
-            throw new NotImplementedException();
+            _db.SaveChanges();
         }
     }
 }
